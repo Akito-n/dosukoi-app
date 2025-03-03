@@ -65,7 +65,7 @@ fn main() {
         .setup(|app| {
             let handle = app.handle().clone();
 
-            // 🔹 Docker の監視を別スレッドで実行
+            // Docker の監視を別スレッドを立てて実行
             thread::spawn(move || {
                 let mut last_groups = Vec::new();
 
