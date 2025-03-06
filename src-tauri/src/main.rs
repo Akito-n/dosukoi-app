@@ -1,7 +1,9 @@
 use serde::Serialize;
 use std::{collections::HashMap, thread, time::Duration};
 use tauri::{Emitter, Manager, Runtime, WebviewWindow};
+use tauri_plugin_dialog::DialogExt;
 mod command;
+mod request;
 
 #[derive(Serialize, Clone, PartialEq)]
 struct ContainerGroup {
@@ -63,8 +65,10 @@ fn emit_containers_update<R: Runtime>(window: &WebviewWindow<R>, groups: Vec<Con
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
             let handle = app.handle().clone();
+            let _ = app.dialog();
 
             // Docker の監視を別スレッドを立てて実行
             thread::spawn(move || {
@@ -91,6 +95,8 @@ fn main() {
             command::stop_container,
             command::kill_container,
             command::kill_group_containers,
+            request::request_docker_path,
+            request::save_docker_path
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
