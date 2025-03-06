@@ -1,6 +1,7 @@
 use serde::Serialize;
 use std::{collections::HashMap, thread, time::Duration};
 use tauri::{Emitter, Manager, Runtime, WebviewWindow};
+mod command;
 
 #[derive(Serialize, Clone, PartialEq)]
 struct ContainerGroup {
@@ -26,7 +27,7 @@ fn get_grouped_containers() -> Vec<ContainerGroup> {
                 let container_name = parts[0].to_string();
                 let project_name = parts[1].to_string();
 
-                // `project_name` が空の場合は "Other" する
+                // `project_name` が空の場合は Otherにしとく
                 let group = if project_name.is_empty() {
                     "Other".to_string()
                 } else {
@@ -85,7 +86,12 @@ fn main() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![get_grouped_containers])
+        .invoke_handler(tauri::generate_handler![
+            get_grouped_containers,
+            command::stop_container,
+            command::kill_container,
+            command::kill_group_containers,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
