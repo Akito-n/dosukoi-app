@@ -20,7 +20,6 @@ pub fn request_docker_path(app: AppHandle) -> Result<String, String> {
             return Err("Docker not found".to_string());
         }
 
-        // ✅ `dialog` の使い方を修正
         let _ = app.dialog().message(format!(
             "Dockerの実行に必要な権限を許可しますか？\nDocker パス: {}",
             docker_path
