@@ -44,10 +44,9 @@ pub fn save_docker_path(app: AppHandle, docker_path: String) -> Result<(), Strin
 
     store.set("docker_path", json!(docker_path));
 
-    // ✅ `.save()` も同様にエラーハンドリング
     store
         .save()
         .map_err(|e| format!("Failed to save store: {}", e))?;
 
-    Ok(()) // ✅ 最後に `()` を返す
+    Ok(())
 }
